@@ -10,7 +10,7 @@ useradd -d /var/www -g www-group -s /bin/false www-user
 chown www-user_www-group /var/www
 ###Assuming src doesn't already exists
 #mkdir /usr/local/src
-###removes the content of SRC
+###removes the content of SRC if needed
 #cd /usr/local/src
 #rm -rf *
 ###Installing PCRE dependency, removing current one if applicable

@@ -1,7 +1,7 @@
 #By JMH
 $type = $args[0]
-#$inp = $args[1]
-#$upper = $args[3]
+#$Iso1Path = $args[1]
+#$Iso2Path = $args[2]
 $OS_Size
 $Share_Size
 $OS = (Get-WmiObject Win32_OperatingSystem).Name
@@ -57,6 +57,7 @@ function Win10Function {
     USBSizeFunction($discnum)
     New-Partition -DiskNumber $discnum -DriveLetter M -Size $OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
     New-Partition -DiskNumber $discnum -DriveLetter S -Size $Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel Share –Force
+    python multibootusb -c -i Iso1Path,Iso2Path -t M:
 }
 
 if ($type -eq 1) {

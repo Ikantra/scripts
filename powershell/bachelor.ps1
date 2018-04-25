@@ -12,10 +12,11 @@ function Win7Function {
     $input="select disk $disc
     clean
     convert mbr
-    create partition primary size=24795
+    create partition primary
     select part 1
     active
     format fs=ntfs label=Boot"
+    #create partition primary size=24795
     #create partition primary size=1908
     $input | diskpart
 }
