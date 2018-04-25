@@ -1,3 +1,4 @@
+#By JMH
 $inp = $args[0]
 function stag($stag){
     echo "inside function"

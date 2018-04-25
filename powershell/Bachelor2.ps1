@@ -55,8 +55,8 @@ function Win10Function {
     }
     Get-Disk $discnum | Clear-disk -RemoveData -Confirm:$false
     USBSizeFunction($discnum)
-    New-Partition -DiskNumber $discnum -DriveLetter G -Size $OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
-    New-Partition -DiskNumber $discnum -DriveLetter H -Size $Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel Share –Force
+    New-Partition -DiskNumber $discnum -DriveLetter M -Size $OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
+    New-Partition -DiskNumber $discnum -DriveLetter S -Size $Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel Share –Force
 }
 
 if ($type -eq 1) {
