@@ -2,27 +2,22 @@
 $type = $args[0]
 $Iso1Name = $args[1]
 $Iso2Name = $args[2]
+$Iso1Path = "C:\Users\ikantra\Downloads\kali-linux-2016.2-amd64.iso"
+$Iso2Path = "C:\Users\ikantra\Downloads\ubuntu-18.04-live-server-amd64.iso"
 $OS_Size
 $Share_Size
 $OS = (Get-WmiObject Win32_OperatingSystem).Name
-$GitSource = "http://github.com/Ikantra/scripts"
 function MBUDependancies(){
     pip3 install pyqt5
     pip3 install wmi
     pip3 install pywin32
     pip3 install psutil
 }
-function NoGit(){
-    mkdir Git
-    cd Git
-    git init
-    git pull $GitSource
-}
+
 function IsoPath(){
     $Iso1Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name
     $Iso2Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name
 }
-
 function USBSizeFunction($disc){
     $help = get-disk $disk
     $size = [Math]::Round($help.size / 1GB)
@@ -55,11 +50,33 @@ function USBSizeFunction($disc){
     }
     else {
         #something something size of ISO
+        $OS_Size = 64
+        $Share_Size = 32
         echo "such size, much wow"
     }
 }
 function Win7Function {
-    echo "--- Multiple  only supports Server 2012 R3 and newer --- "
+    echo "--- Multiple partitioning is only supported Server 2012 R3 and newer --- "
+    $read1 = Read-Host "Do you want just multiple OS capability? y/n"
+    if ($read1 -match 'y') {
+        Win7FunctionObsolete
+    }
+}
+function Win7FunctionObsolete {
+    "list disk" | diskpart
+    $disc = Read-Host 'Which disk do you want to format?'
+    while( ![int]::TryParse( $read, [ref]$disc)) {
+        $read = Read-Host 'Please enter the disc number you wish to format'
+    }
+    $input="select disk $disc
+    clean
+    convert mbr
+    create partition primary
+    select part 1
+    active
+    format fs=ntfs label=Boot"
+    $input | diskpart
+    MultiBoot
 }
 function WinServerFunction {
     echo "--- WinServ 2012 R3 and newer should run fine, problems might occur ---"
@@ -68,25 +85,32 @@ function WinServerFunction {
 function Win10Function {
     Get-Disk
     $discnum = -1             #changed to -1 to remove fringe cases where the default variable could be used
-    $read = Read-Host 'Which disc do you wish to format?'
-    while( ![int]::TryParse( $read, [ref]$discnum)) {
-        $read = Read-Host 'Please enter the disc number you wish to format'
+    $read2 = Read-Host 'Which disc do you wish to format?'
+    while( ![int]::TryParse( $read2, [ref]$discnum)) {
+        $read2 = Read-Host 'Please enter the disc number you wish to format'
     }
     Get-Disk $discnum | Clear-disk -RemoveData -Confirm:$false
     USBSizeFunction($discnum)
     New-Partition -DiskNumber $discnum -DriveLetter M -Size $OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
     New-Partition -DiskNumber $discnum -DriveLetter S -Size $Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel Share –Force
-    python multibootusb -c -i Iso1Path,Iso2Path -t M:
+    MultiBoot
+}
+function MultiBoot () {
+    if (type -eq "full") {
+        MBUDependancies
+        IsoPath
+    }
+    python multibootusb -c -i $Iso1Path,$Iso2Path -t M:
 }
 
-if ($type -eq test) {
+if ($type -eq "test") {
+    #echo "stag"
+    $read3 = Read-Host "This option will format and partition disk 1 as NTFS, continue? y/n"
+    if ($read3 -eq 1) {
+        Win7Function
+    }
     Get-Disk 1 | Clear-disk -RemoveData -Confirm:$false
     New-Partition -DiskNumber 1 -DriveLetter G -UseMaximumSize -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
-}
-elseif ($type -eq full) {
-    MBUDependancies()
-    NoGit()
-    IsoPath()
 }
 
 if ($OS -Match "Windows 7"){
@@ -102,5 +126,12 @@ elseif ($type -Match "Windows 10") {
     Win10Function
 }
 else{
-    echo "--- Could not validate OS, manual input/something ---"
+    echo "--- Could not validate Operating System ---"
+    $read4 = Read-Host "Do you wish to force Win7 Diskpart(1) or Win 10 Get-Disk(2) function? 1/2"
+    if ($read4 -eq 1) {
+        Win7Function
+    }
+    elseif ($read -eq 2) {
+        Win10Function
+    }
 }
