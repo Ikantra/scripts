@@ -1,10 +1,28 @@
 #By JMH
 $type = $args[0]
-#$Iso1Path = $args[1]
-#$Iso2Path = $args[2]
+$Iso1Name = $args[1]
+$Iso2Name = $args[2]
 $OS_Size
 $Share_Size
 $OS = (Get-WmiObject Win32_OperatingSystem).Name
+$GitSource = "http://github.com/Ikantra/scripts"
+function MBUDependancies(){
+    pip3 install pyqt5
+    pip3 install wmi
+    pip3 install pywin32
+    pip3 install psutil
+}
+function NoGit(){
+    mkdir Git
+    cd Git
+    git init
+    git pull $GitSource
+}
+function IsoPath(){
+    $Iso1Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name
+    $Iso2Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name
+}
+
 function USBSizeFunction($disc){
     $help = get-disk $disk
     $size = [Math]::Round($help.size / 1GB)
@@ -41,10 +59,11 @@ function USBSizeFunction($disc){
     }
 }
 function Win7Function {
-    echo "--- This script only supports Server 2012 R3 and newer --- "
+    echo "--- Multiple  only supports Server 2012 R3 and newer --- "
 }
 function WinServerFunction {
-    echo "--- nothing here so far ---"
+    echo "--- WinServ 2012 R3 and newer should run fine, problems might occur ---"
+    Win10Function
 }
 function Win10Function {
     Get-Disk
@@ -60,9 +79,14 @@ function Win10Function {
     python multibootusb -c -i Iso1Path,Iso2Path -t M:
 }
 
-if ($type -eq 1) {
+if ($type -eq test) {
     Get-Disk 1 | Clear-disk -RemoveData -Confirm:$false
     New-Partition -DiskNumber 1 -DriveLetter G -UseMaximumSize -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
+}
+elseif ($type -eq full) {
+    MBUDependancies()
+    NoGit()
+    IsoPath()
 }
 
 if ($OS -Match "Windows 7"){
