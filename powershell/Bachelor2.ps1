@@ -2,9 +2,10 @@
 $type = $args[0]
 $global:Iso1Name = $args[1]
 $global:Iso2Name = $args[2]
+$global:MBUPath = $args[3]
 $global:Iso1Path = "C:\Users\ikantra\Downloads\kali-linux-2016.2-amd64.iso"
 $global:Iso2Path = "C:\Users\ikantra\Downloads\ubuntu-18.04-live-server-amd64.iso"
-$global:MBUPath = "C:\Users\ikantra\Downloads\MultiBootUSB"
+$global:DMBUPath = "C:\Users\ikantra\Downloads\MultiBootUSB"
 $global:OS_Size
 $global:Share_Size
 $OS = (Get-WmiObject Win32_OperatingSystem).Name
@@ -60,10 +61,10 @@ function USBSizeFunction($disc){
 function MultiBoot () {
     if ($type -eq "full") {
         MBUDependancies
-        IsoPath
+        #IsoPath
     }
-    cd $global:MBUPath
-    python multibootusb -c -i $global:Iso1Path,$global:Iso2Path -t M:
+    cd $global:DMBUPath
+    python multibootusb -c -i $global:Iso1Path,$global:Iso2Path -t M: -y
 }
 function Win7Function {
     echo "--- Multiple partitioning is only supported Server 2012 R3 and newer --- "
