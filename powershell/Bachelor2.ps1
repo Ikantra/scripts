@@ -100,8 +100,8 @@ function Win10Function {
     while( ![int]::TryParse( $read2, [ref]$discnum)) {
         $read2 = Read-Host 'Please enter the disc number you wish to format'
     }
-    USBSizeFunction($discnum)
     Get-Disk $discnum | Clear-Disk -RemoveData -Confirm:$false
+    USBSizeFunction($discnum)
     New-Partition -DiskNumber $discnum -DriveLetter M -Size $global:OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
     New-Partition -DiskNumber $discnum -DriveLetter S -Size $global:Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel Share –Force
     MultiBoot
