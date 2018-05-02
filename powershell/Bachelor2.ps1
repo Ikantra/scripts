@@ -15,45 +15,53 @@ function MBUDependancies(){
 }
 
 function IsoPath(){
-    $Iso1Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name
-    $Iso2Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name
+    #Find prettier solution than [1 .. 99]
+    $Iso1Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name[1 .. 99]
+    $Iso2Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name[1 .. 99]
 }
 function USBSizeFunction($disc){
-    $help = get-disk $disk
+    $help = get-disk $disc
     $size = [Math]::Round($help.size / 1GB)
     if ($size -lt 4) {
         echo "Size of volume too small, select other volume"
     }
     elseif ($size -eq 4) {
-        $OS_Size = 2
-        $Share_Size = 1
+        $OS_Size = 2GB
+        $Share_Size = 1GB
     }
-    elseif ($size -eq 8) {
-        $OS_Size = 6
-        $Share_Size = 1
+    elseif ($size -le 8) {
+        $OS_Size = 6GB
+        $Share_Size = 1GB
     }
-    elseif ($size -eq 16) {
-        $OS_Size = 10
-        $Share_Size = 3
+    elseif ($size -le 16) {
+        $OS_Size = 10GB
+        $Share_Size = 3GB
     }
-    elseif ($size -eq 32) {
-        $OS_Size = 22
-        $Share_Size = 4
+    elseif ($size -le 32) {
+        $OS_Size = 22GB
+        $Share_Size = 4GB
     }
-    elseif ($size -eq 64) {
-        $OS_Size = 32
-        $Share_Size = 8
+    elseif ($size -le 64) {
+        $OS_Size = 32GB
+        $Share_Size = 8GB
     }
-    elseif ($size -eq 128) {
-        $OS_Size = 64
-        $Share_Size = 32
+    elseif ($size -le 128) {
+        $OS_Size = 64GB
+        $Share_Size = 32GB
     }
     else {
         #something something size of ISO
-        $OS_Size = 64
-        $Share_Size = 32
+        $OS_Size = 64GB
+        $Share_Size = 32GB
         echo "such size, much wow"
     }
+}
+function MultiBoot () {
+    if (type -eq "full") {
+        MBUDependancies
+        IsoPath
+    }
+    python multibootusb -c -i $Iso1Path,$Iso2Path -t M:
 }
 function Win7Function {
     echo "--- Multiple partitioning is only supported Server 2012 R3 and newer --- "
@@ -89,28 +97,11 @@ function Win10Function {
     while( ![int]::TryParse( $read2, [ref]$discnum)) {
         $read2 = Read-Host 'Please enter the disc number you wish to format'
     }
-    Get-Disk $discnum | Clear-disk -RemoveData -Confirm:$false
     USBSizeFunction($discnum)
+    Get-Disk $discnum | Clear-Disk -RemoveData -Confirm:$false
     New-Partition -DiskNumber $discnum -DriveLetter M -Size $OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
     New-Partition -DiskNumber $discnum -DriveLetter S -Size $Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel Share –Force
     MultiBoot
-}
-function MultiBoot () {
-    if (type -eq "full") {
-        MBUDependancies
-        IsoPath
-    }
-    python multibootusb -c -i $Iso1Path,$Iso2Path -t M:
-}
-
-if ($type -eq "test") {
-    #echo "stag"
-    $read3 = Read-Host "This option will format and partition disk 1 as NTFS, continue? y/n"
-    if ($read3 -eq 1) {
-        Win7Function
-    }
-    Get-Disk 1 | Clear-disk -RemoveData -Confirm:$false
-    New-Partition -DiskNumber 1 -DriveLetter G -UseMaximumSize -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
 }
 
 if ($OS -Match "Windows 7"){
@@ -121,13 +112,13 @@ elseif ($OS -Match "Windows Server 201?"){
     echo "--- Operating System Verified as Server 201X ---"
     WinServerFunction
 }
-elseif ($type -Match "Windows 10") {
+elseif ($OS -Match "Windows 10") {
     echo "--- Operating System Verified as Windows 10 ---"
     Win10Function
 }
 else{
     echo "--- Could not validate Operating System ---"
-    $read4 = Read-Host "Do you wish to force Win7 Diskpart(1) or Win 10 Get-Disk(2) function? 1/2"
+    $read4 = Read-Host "Do you wish to force Win7 Diskpart(1) or Win 10 Get-Disk(2) function?"
     if ($read4 -eq 1) {
         Win7Function
     }
