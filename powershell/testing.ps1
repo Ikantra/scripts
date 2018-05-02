@@ -1,11 +1,18 @@
 #By JMH
 #$GitSource = "http://github.com/Ikantra/scripts"
 $inp = $args[0]
+$global:test = 1
+echo "Top:"$test
 function stag($stag){
     echo "inside function"
     echo $stag
     [Math]::Round($stag / 1GB)
     #return
+}
+function CarryFunction () {
+    $global:test = 3
+    echo "Inside Function :"$global:test
+
 }
 function InputFunction ($help) {
     echo "Inside function: "$help
@@ -35,10 +42,21 @@ if($inp -eq 1){
 elseif ($inp -eq 2) {
     Win10Function
 }
+elseif ($inp -eq 3) {
+    echo "Start of if: "$global:test
+    $global:test = 2
+    echo "If before function: "$global:test
+    CarryFunction
+    echo "If after function: "$global:test
+    #$array = @("test1", "test2", "test3")
+    #$tiss[0]
+}
 else {
     echo "else"
 }
-echo "test"
+#echo "test"
+
+
 #########
 #function NoGit(){
 #    mkdir Git

@@ -1,11 +1,11 @@
 #By JMH
 $type = $args[0]
-$Iso1Name = $args[1]
-$Iso2Name = $args[2]
-$Iso1Path = "C:\Users\ikantra\Downloads\kali-linux-2016.2-amd64.iso"
-$Iso2Path = "C:\Users\ikantra\Downloads\ubuntu-18.04-live-server-amd64.iso"
-$OS_Size
-$Share_Size
+$global:Iso1Name = $args[1]
+$global:Iso2Name = $args[2]
+$global:Iso1Path = "C:\Users\ikantra\Downloads\kali-linux-2016.2-amd64.iso"
+$global:Iso2Path = "C:\Users\ikantra\Downloads\ubuntu-18.04-live-server-amd64.iso"
+$global:OS_Size
+$global:Share_Size
 $OS = (Get-WmiObject Win32_OperatingSystem).Name
 function MBUDependancies(){
     pip3 install pyqt5
@@ -16,8 +16,8 @@ function MBUDependancies(){
 
 function IsoPath(){
     #Find prettier solution than [1 .. 99]
-    $Iso1Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name[1 .. 99]
-    $Iso2Path = (Get-Item -Path ".\" -Verbose).FullName + $Iso1Name[1 .. 99]
+    $global:Iso1Path = (Get-Item -Path ".\" -Verbose).FullName + $global:Iso1Name[1 .. 99]
+    $global:Iso2Path = (Get-Item -Path ".\" -Verbose).FullName + $global:Iso1Name[1 .. 99]
 }
 function USBSizeFunction($disc){
     $help = get-disk $disc
@@ -26,42 +26,42 @@ function USBSizeFunction($disc){
         echo "Size of volume too small, select other volume"
     }
     elseif ($size -eq 4) {
-        $OS_Size = 2GB
-        $Share_Size = 1GB
+        $global:OS_Size = 2GB
+        $global:Share_Size = 1GB
     }
     elseif ($size -le 8) {
-        $OS_Size = 6GB
-        $Share_Size = 1GB
+        $global:OS_Size = 6GB
+        $global:Share_Size = 1GB
     }
     elseif ($size -le 16) {
-        $OS_Size = 10GB
-        $Share_Size = 3GB
+        $global:OS_Size = 10GB
+        $global:Share_Size = 3GB
     }
     elseif ($size -le 32) {
-        $OS_Size = 22GB
-        $Share_Size = 4GB
+        $global:OS_Size = 22GB
+        $global:Share_Size = 4GB
     }
     elseif ($size -le 64) {
-        $OS_Size = 32GB
-        $Share_Size = 8GB
+        $global:OS_Size = 32GB
+        $global:Share_Size = 8GB
     }
     elseif ($size -le 128) {
-        $OS_Size = 64GB
-        $Share_Size = 32GB
+        $global:OS_Size = 64GB
+        $global:Share_Size = 32GB
     }
     else {
         #something something size of ISO
-        $OS_Size = 64GB
-        $Share_Size = 32GB
+        $global:OS_Size = 64GB
+        $global:Share_Size = 32GB
         echo "such size, much wow"
     }
 }
 function MultiBoot () {
-    if (type -eq "full") {
+    if ($type -eq "full") {
         MBUDependancies
         IsoPath
     }
-    python multibootusb -c -i $Iso1Path,$Iso2Path -t M:
+    python multibootusb -c -i $global:Iso1Path,$global:Iso2Path -t M:
 }
 function Win7Function {
     echo "--- Multiple partitioning is only supported Server 2012 R3 and newer --- "
@@ -99,8 +99,8 @@ function Win10Function {
     }
     USBSizeFunction($discnum)
     Get-Disk $discnum | Clear-Disk -RemoveData -Confirm:$false
-    New-Partition -DiskNumber $discnum -DriveLetter M -Size $OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
-    New-Partition -DiskNumber $discnum -DriveLetter S -Size $Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel Share –Force
+    New-Partition -DiskNumber $discnum -DriveLetter M -Size $global:OS_Size -IsActive | Format-Volume -FileSystem "NTFS" -Confirm:$false -NewFileSystemLabel OS –Force
+    New-Partition -DiskNumber $discnum -DriveLetter S -Size $global:Share_Size | Format-Volume -FileSystem "NTFS" -Confirm:$false -NewFileSystemLabel Share –Force
     MultiBoot
 }
 
