@@ -2,12 +2,21 @@
 #$GitSource = "http://github.com/Ikantra/scripts"
 $inp = $args[0]
 $global:test = 1
-echo "Top:"$test
+#$global:Iso1Name[1 .. 255] #removes the first character and uses the second through the 255th
+echo "Top: $test"
 function stag($stag){
     echo "inside function"
     echo $stag
     [Math]::Round($stag / 1GB)
     #return
+}
+function Location () {
+    (Get-Item -Path ".\" -Verbose).FullName
+    (Get-Location).Path
+    $poof = ".\powershell"
+    $vrom = (pwd).Path + "\" + $poof
+    (pwd).Path
+    cd $vrom
 }
 function CarryFunction () {
     $global:test = 3
@@ -50,6 +59,9 @@ elseif ($inp -eq 3) {
     echo "If after function: "$global:test
     #$array = @("test1", "test2", "test3")
     #$tiss[0]
+}
+elseif ($inp -eq 4) {
+    Location
 }
 else {
     echo "else"
