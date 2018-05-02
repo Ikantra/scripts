@@ -4,6 +4,7 @@ $global:Iso1Name = $args[1]
 $global:Iso2Name = $args[2]
 $global:Iso1Path = "C:\Users\ikantra\Downloads\kali-linux-2016.2-amd64.iso"
 $global:Iso2Path = "C:\Users\ikantra\Downloads\ubuntu-18.04-live-server-amd64.iso"
+$global:MBUPath = "C:\Users\ikantra\Downloads\MultiBootUSB"
 $global:OS_Size
 $global:Share_Size
 $OS = (Get-WmiObject Win32_OperatingSystem).Name
@@ -61,6 +62,7 @@ function MultiBoot () {
         MBUDependancies
         IsoPath
     }
+    cd $global:MBUPath
     python multibootusb -c -i $global:Iso1Path,$global:Iso2Path -t M:
 }
 function Win7Function {
@@ -99,8 +101,8 @@ function Win10Function {
     }
     USBSizeFunction($discnum)
     Get-Disk $discnum | Clear-Disk -RemoveData -Confirm:$false
-    New-Partition -DiskNumber $discnum -DriveLetter M -Size $global:OS_Size -IsActive | Format-Volume -FileSystem "NTFS" -Confirm:$false -NewFileSystemLabel OS –Force
-    New-Partition -DiskNumber $discnum -DriveLetter S -Size $global:Share_Size | Format-Volume -FileSystem "NTFS" -Confirm:$false -NewFileSystemLabel Share –Force
+    New-Partition -DiskNumber $discnum -DriveLetter M -Size $global:OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel OS –Force
+    New-Partition -DiskNumber $discnum -DriveLetter S -Size $global:Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel Share –Force
     MultiBoot
 }
 
@@ -124,5 +126,8 @@ else{
     }
     elseif ($read -eq 2) {
         Win10Function
+    }
+    else{
+        echo "Else"
     }
 }
