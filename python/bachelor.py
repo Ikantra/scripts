@@ -5,10 +5,10 @@ import os
 IPolicy=str('Not the right policy')
 def Linux():
     print('Linux')
-    os.system('.\lin.sh')
+    os.system(".\'lin.sh'")
 def OSX():
     print('OSX')
-    os.system('.\osx.sh')
+    os.system(".\'osx.sh'")
 def Windows():
     #print('Windows')
     global IPolicy
