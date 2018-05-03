@@ -9,6 +9,9 @@ $global:DMBUPath = 'C:\Users\ikantra\Downloads\MultiBootUSB'
 $global:OS_Size
 $global:Share_Size
 $global:discnum = -1             #changed to -1 to remove fringe cases where the default variable could be used
+$DriveLetter1 = "M:"
+$DriveLetter2 = "S:"
+$DriveLetter3 = "N:"
 $MBName = 'OS'
 $ShareName = 'Share'
 $FixName = 'Fix'
@@ -19,7 +22,7 @@ function FixFunction(){
     while( ![int]::TryParse( $tofix, [ref]$global:discnum)) {
         $tofix = Read-Host 'Please enter the disc number you wish to format'
     }
-    New-Partition -DiskNumber $global:discnum -DriveLetter N -Size 1GB | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel $FixName
+    New-Partition -DiskNumber $global:discnum -DriveLetter $DriveLetter3[0] -Size 1GB | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel $FixName
 }
 function MBUDependancies(){
     pip3 install pyqt5
@@ -72,10 +75,12 @@ function USBSizeFunction($disc){
 function MultiBoot () {
     if ($type -eq 'full') {
         MBUDependancies
-        IsoPath
     }
-    cd $global:DMBUPath
-    python multibootusb -c -i $global:Iso1Path,$global:Iso2Path -t M: -y
+    IsoPath
+    if ($global:MBUPath -eq $null) {
+        cd $global:DMBUPath    
+    }
+    python multibootusb -c -i $global:Iso1Path,$global:Iso2Path -t $DriveLetter1 -y
 }
 function Win7Function {
     echo '--- Multiple partitioning is only supported Server 2012 R3 and newer --- '
@@ -88,7 +93,7 @@ function Win7FunctionObsolete {
     'list disk' | diskpart
     $disc = Read-Host 'Which disk do you want to format?'
     while( ![int]::TryParse( $read, [ref]$disc)) {
-        $read = Read-Host 'Please enter the disc number you wish to format'
+        $read = Read-Host 'Could not validate input as a integer, please input the disc number you wish to format'
     }
     $input='select disk $disc
     clean
@@ -108,12 +113,12 @@ function Win10Function {
     Get-Disk
     $read2 = Read-Host 'Which disc do you wish to format?'
     while( ![int]::TryParse( $read2, [ref]$global:discnum)) {
-        $read2 = Read-Host 'Please enter the disc number you wish to format'
+        $read2 = Read-Host 'Could not validate input as a integer, please input the disc number you wish to format'
     }
     Get-Disk $global:discnum | Clear-Disk -RemoveData -Confirm:$false
     USBSizeFunction($global:discnum)
-    New-Partition -DiskNumber $global:discnum -DriveLetter M -Size $global:OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel $MBName
-    New-Partition -DiskNumber $global:discnum -DriveLetter S -Size $global:Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel $ShareName
+    New-Partition -DiskNumber $global:discnum -DriveLetter $DriveLetter1[0] -Size $global:OS_Size -IsActive | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel $MBName
+    New-Partition -DiskNumber $global:discnum -DriveLetter $DriveLetter2[0] -Size $global:Share_Size | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel $ShareName
     MultiBoot
 }
 

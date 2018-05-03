@@ -10,14 +10,15 @@ def OSX():
     print('OSX')
     os.system('.\osx.sh')
 def Windows():
-    print('Windows')
+    #print('Windows')
     global IPolicy
     Helpvar = os.popen('powershell Get-ExecutionPolicy').read()
-    print(Helpvar)
+    #print("Current Execution Policy: "+Helpvar)
     IPolicy=Helpvar[:-1]
     #print(IPolicy)
     os.system('powershell Set-ExecutionPolicy "Unrestricted"') #Change to funct?
     os.system("powershell .\'bachelor2.ps1'")
+    #print("Changing Execution Policy back to: "+IPolicy)
     IPolicy="powershell Set-ExecutionPolicy "+IPolicy
     os.system(IPolicy)
 if platform == "linux" or platform == "linux2":
@@ -29,4 +30,4 @@ elif platform == "darwin":
 elif platform == "win32":
     print('Windows platform detected, running Powershell script')
     Windows()
-print('End')
+print('Done')
