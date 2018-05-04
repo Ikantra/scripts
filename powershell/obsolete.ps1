@@ -35,11 +35,11 @@ if ($OS -Match "Windows 7"){
 }
 elseif ($OS -Match "Windows Server 201?"){
     echo "--- Operating System Verified as Server 201X ---"
-    WinServerFunction
+    .\powershell\"Bachelor.ps1"
 }
 elseif ($type -Match "Windows 10") {
     echo "--- Operating System Verified as Windows 10 ---"
-    Win10Function
+    .\powershell\"Bachelor.ps1"
 }
 else{
     echo "--- Could not validate OS, manual input/something ---"

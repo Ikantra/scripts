@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #By JMH
+import sys
 from sys import platform
 import os
 IPolicy=str('Not the right policy')
@@ -17,7 +18,7 @@ def Windows():
     IPolicy=Helpvar[:-1]
     #print(IPolicy)
     os.system('powershell Set-ExecutionPolicy "Unrestricted"') #Change to funct?
-    os.system("powershell .\'bachelor2.ps1'")
+    os.system("powershell .\'bachelor.ps1' "+sys.argv[1]+" "+sys.argv[2])
     #print("Changing Execution Policy back to: "+IPolicy)
     IPolicy="powershell Set-ExecutionPolicy "+IPolicy
     os.system(IPolicy)
