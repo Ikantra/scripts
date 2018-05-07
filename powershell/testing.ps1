@@ -1,9 +1,10 @@
 #By JMH
 #$GitSource = "http://github.com/Ikantra/scripts"
 $inp = $args[0]
+echo $args[0]$args[1]$args[2]$args[3]$args[4]
 $global:test = 1
 #$global:Iso1Name[1 .. 255] #removes the first character and uses the second through the 255th
-echo "Top: $test"
+#echo "Top: $test"
 function stag($stag){
     echo "inside function"
     echo $stag

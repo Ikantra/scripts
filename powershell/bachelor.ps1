@@ -24,7 +24,7 @@ function FixFunction(){
     }
     New-Partition -DiskNumber $global:discnum -DriveLetter $DriveLetter3[0] -Size 1GB | Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel $FixName
 }
-function MBUDependancies(){
+function MBUDependencies(){
     pip3 install pyqt5
     pip3 install wmi
     pip3 install pywin32
@@ -74,11 +74,13 @@ function USBSizeFunction($disc){
 }
 function MultiBoot () {
     if ($type -eq 'full') {
-        MBUDependancies
+        MBUDependencies
     }
     IsoPath
     if ($global:MBUPath -eq $null) {
-        cd $global:DMBUPath    
+        echo '--- Path to MultiBootUSB not added, will attempt to see if it can be run from current path ---'
+        cd (pwd).Path + '\MultiBootUSB'
+        #cd $global:DMBUPath    
     }
     python multibootusb -c -i $global:Iso1Path,$global:Iso2Path -t $DriveLetter1 -y
 }
@@ -125,6 +127,10 @@ function Win10Function {
 if ($type -eq 'fix') {
     echo '--- Running fix for (Format-Volume) Error ---'
     FixFunction
+}
+elseif ($type -eq 'add') {
+    echo '--- Running function to add additional OS ---'
+    MultiBoot
 }
 elseif ($OS -Match 'Windows 7'){
     echo '--- Operating System Verified as Windows 7 ---'

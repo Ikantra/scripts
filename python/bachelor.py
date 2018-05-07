@@ -18,7 +18,8 @@ def Windows():
     IPolicy=Helpvar[:-1]
     #print(IPolicy)
     os.system('powershell Set-ExecutionPolicy "Unrestricted"') #Change to funct?
-    os.system("powershell .\'bachelor.ps1' "+sys.argv[1]+" "+sys.argv[2])
+    #os.system("powershell .\'testing.ps1' full "+sys.argv[1]+" "+sys.argv[2])
+    os.system("powershell .\'bachelor.ps1' full "+sys.argv[1]+" "+sys.argv[2])
     #print("Changing Execution Policy back to: "+IPolicy)
     IPolicy="powershell Set-ExecutionPolicy "+IPolicy
     os.system(IPolicy)
