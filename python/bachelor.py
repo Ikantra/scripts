@@ -6,7 +6,7 @@ import os
 IPolicy=str('Not the right policy')
 def Linux():
     print('Linux')
-    os.system(".\'lin.sh'")
+    os.system(".\'bachelor.sh'")
 def OSX():
     print('OSX')
     os.system(".\'osx.sh'")
