@@ -1,7 +1,15 @@
 import random
+import math
+import csv
 #import pdb;pdb.set_trace()
 MAXPHEROMONES = 100000
 MINPHEROMONES = 1
+generalPath = "C:/Users/ikantra/Downloads/City data for ant/output/" 
+inputFile = generalPath+"testCityJumps"
+inputType = ".csv"
+outputFileName = generalPath+"output"
+nameGreedy = "Greedy"
+nameAnt = "Ant"
 
 class Node:
    def __init__(self,name):
@@ -66,9 +74,81 @@ edges = [
    Edge(c,e,125),
    Edge(d,e,75)]
 
+with open(inputFile+str(10)+inputType,'r') as in_file:
+    firstTime = 0
+    helpVar = 12 #Size -1 as we have identifiers on top
+    help2Var = 0
+    nodes = [Node] * helpVar 
+    testThing = sum(range(helpVar))
+    edges = [Edge] * testThing #Since its 0 indexing this would usually be -1
+    #City = array[3] // Lattitude = array[5] // Longtitude = array[6]
+    for line2 in in_file:
+        if firstTime == 0:
+            firstTime += 1
+            continue
+        array = line2.split(",")
+        print("Node= "+array[3])
+        nodes[help2Var] = Node(""+array[3])
+        stag = helpVar-help2Var
+        for line in in_file:
+            if stag < help2Var+1:
+                continue
+            array2 = line.split(",")
+            lat1 = float(array[5])
+            lat2 = float(array2[5])
+            lon1 = float(array[6])
+            lon2 = float(array2[6])
+            helpFloat = math.acos(math.sin(lat1)*math.sin(lat2)+math.cos(lat1)*math.cos(lat2)*math.cos(lon1-lon2))
+            help2Float = 2*math.asin(math.sqrt((math.sin((lat1-lat2)/2))**2+math.cos(lat1)*math.cos(lat2)*(math.sin((lon1-lon2)/2))**2))
+            testMath = (help2Float/2*math.pi)*6356.752/100
+            print("CITY HUAN: "+str(array[3])+" CITY TWO: "+str(array2[3])+" NUMBAH: "+str(testMath)+" "+str(int(testMath)))
+            edges[stag+help2Var] = Edge(Node(""+array[3]),Node(""+array2[3]),int(help2Float))
+            stag +=1
+        help2Var += 1
+
+'''
+def nodesFromData(inp, numberOfTowns):
+    global nodes
+    global edges
+    with open(inp+str(numberOfTowns)+inputType,'r') as in_file:
+        firstTime = 0
+        helpVar = 12 #Size -1 as we have identifiers on top
+        help2Var = 0
+        nodes = [""] * helpVar 
+        testThing = sum(range(helpVar))
+        edges = [Edge] * testThing #Since its 0 indexing this would usually be -1
+        #City = array[3] // Lattitude = array[5] // Longtitude = array[6]
+        for line in in_file:
+            if firstTime == 0:
+                firstTime += 1
+                continue
+            array = line.split(",")
+            nodes[help2Var] = Node(""+array[3])
+            stag = helpVar-help2Var
+            for line in in_file:
+                if stag <= help2Var:
+                    continue
+                array2 = line.split(",")
+                lat1 = float(array[5])
+                lat2 = float(array2[5])
+                lon1 = float(array[6])
+                lon2 = float(array2[6])
+                helpFloat = math.acos(math.sin(lat1)*math.sin(lat2)+math.cos(lat1)*math.cos(lat2)*math.cos(lon1-lon2))
+                print(helpFloat)
+                edges[stag+help2Var] = Edge(Node(array[3]),Node(array2[3]),int(helpFloat))#INSER DISTANCE NUMBAH!
+                stag +=1
+            help2Var += 1
+    #return nodes, edges
+
+nodesFromData(inputFile, 10)
+for testEdge in edges:
+    print(testEdge)
+'''
+'''
 def sortEdges(edges):
-    
+    print("test")
     return(sorted(edges))
+'''
 
 #Make symetrical
 for oneEdge in edges[:]:
@@ -107,7 +187,10 @@ class Greedy:
 print("Greedy")
 g = Greedy()
 g.walk(a)
-print("Cost:",sum([e.cost for e in g.visitedEdges]))
+#print("Cost:",sum([e.cost for e in g.visitedEdges]))
+with open(outputFileName+nameGreedy+inputType,'w') as out_file:
+    for e in g.visitedEdges:
+        out_file.write(str(e))    #Else write as normal
 
 #Cost function
 def getSum(edges):
@@ -156,10 +239,15 @@ for i in range(100000):
     ant.pheromones()
     checkAllEdges(edges)
     #print i,getSum(ant.visitedEdges)
-    print(getSum(ant.visitedEdges))
+    ####print(getSum(ant.visitedEdges))
 
 #Printing
 ant = ANT()
 ant.walk(a)
+'''
 for edge in ant.visitedEdges:
     print(edge,edge.pheromones)
+'''
+with open(outputFileName+nameAnt+inputType,'w') as out_file:
+    for edge in ant.visitedEdges:
+        out_file.write(""+str(edge)+str(edge.pheromones))    #Else write as normal

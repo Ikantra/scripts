@@ -94,6 +94,13 @@ def plotThingTest(inp1, inp2, label1, label2):
 #filterByCountry(inputPath,outputPath+outputName1,wordToFilterBy,rowNameToFilterBy)
 #filterOutDuplicatesByRow(outputPath+outputName1,outputPath+outputName2,sortingRow)
 #filterTooSmallEntities(outputPath+outputName2,outputPath+outputName3,sortingRow,minNameSize)
-getSmallSetToWorkWith(outputPath+outputName3,outputPath+testCityNumberName,mainCity1,mainCity2,cityJumps)
+#getSmallSetToWorkWith(outputPath+outputName3,outputPath+testCityNumberName,mainCity1,mainCity2,cityJumps)
 
 #plotThingTest(gwFiles+plotFile1,gwFiles+plotFile2,labelName1,labelName2)
+
+'''
+with open(outputPath+testCityNumberName+str(cityJumps)+outputFormat,'r') as in_file:
+    for line in range(in_file):
+        for line2 in range(in_file):
+            print(line," - ",line2)
+'''
