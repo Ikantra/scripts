@@ -2,7 +2,10 @@
 
 $myRepo = "http://www.github.com/ikantra/scripts"
 
-function initGit($uName, $eMail){
+function gitInit {
+    git remote add origin $myRepo
+}
+function initSetup($uName, $eMail){
     git config --global user.name $uName
     git config --global user.email $eMail
 }
@@ -17,3 +20,5 @@ function gitPull {
     #git pull --rebase $myRepo #Will overwrite
     git pull $myRepo #Sufficient?
 }
+
+echo "please navigate to your git repository"

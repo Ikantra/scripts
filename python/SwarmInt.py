@@ -11,7 +11,7 @@ plotFile2 = "mmas"+outputFormat
 labelName1 = "evap"
 labelName2 = "mmas"
 outputPath = generalPath+"output/"
-sortingRow = 3      #Which row would you like to sort by? "city" in our example which is index 4-1=3
+sortingRow = 3      #Which row would you like to sort by? "city" in our example which is index 4-1=3 (0 index vs not)
 minNameSize = 2+3   #First element is namelength, second is emptylength string being 3 here
 outputName1 = "test2"+outputFormat
 outputName2 = "test3"+outputFormat
