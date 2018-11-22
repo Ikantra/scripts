@@ -3,17 +3,19 @@ $type = $args[0]
 #$inp = $args[1]
 #$upper = $args[3]
 
+$SaveLoc = "D:\Brukere\Soveilion\Dokumenter\KoeiTecmo\NIOH"
+$BackupLoc = "D:\Brukere\Soveilion\Dokumenter\Spill+\Nioh"
 function Save {
-    cp C:\Users\Soveilion\Documents\KoeiTecmo\NIOH\Savedata D:\Brukere\Soveilion\Dokumenter\Spill+\Nioh -Recurse -Force
+    cp $SaveLoc $BackupLoc -Recurse -Force
 }
 
 function Restore {
-    cp D:\Brukere\Soveilion\Dokumenter\Spill+\Nioh\Savedata C:\Users\Soveilion\Documents\KoeiTecmo\NIOH  -Recurse -Force
+    cp $BackupLoc\Savedata $SaveLoc  -Recurse -Force
 }
 
 function Backup {
     $now = [datetime]::now.ToString('yyyy-MM-dd-hh_mm')
-    cp D:\Brukere\Soveilion\Dokumenter\Spill+\Nioh\Savedata D:\Brukere\Soveilion\Dokumenter\Spill+\Nioh\Backup\Savedata.$now
+    cp $BackupLoc\Savedata $BackupLoc\Backup\Savedata.$now
 }
 
 if ($type -eq "restore"){
