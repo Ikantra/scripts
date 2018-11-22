@@ -7,9 +7,13 @@ function initGit($uName, $eMail){
     git config --global user.email $eMail
 }
 
-#Copy from branch
-git clone $myRepo
+function gitCopy {
+    #Copy from branch
+    git clone $myRepo
+}
 
-#Overwrite current changes with the one on the master
-#git pull --rebase $myRepo #Will overwrite
-git pull $myRepo #Sufficient?
+function gitPull {
+    #Overwrite current changes with the one on the master
+    #git pull --rebase $myRepo #Will overwrite
+    git pull $myRepo #Sufficient?
+}
