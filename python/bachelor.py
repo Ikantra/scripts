@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 #By JMH
+
+#exec(open("./filename").read())
 import sys
 from sys import platform
 import os

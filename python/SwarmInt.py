@@ -16,26 +16,27 @@ minNameSize = 2+3   #First element is namelength, second is emptylength string b
 outputName1 = "test2"+outputFormat
 outputName2 = "test3"+outputFormat
 outputName3 = "test4"+outputFormat
+wordToFilterBy = "NO"
+rowNameToFilterBy = "postalCode"
 testCityNumberName = "testCityJumps"
 mainCity1 = "Oslo"
 mainCity2 = "Bergen"
 cityJumps = 5
 
 def filterByCountry(inp, out, filterWord, firstLine): #str, str, str, str
-    with open(inp, 'r') as f_in:
-        with open(out, 'w', newline='') as f_outfile:
-            f_out = csv.writer(f_outfile, escapechar=' ',quoting=csv.QUOTE_NONE)
+    with open(inp, 'r') as f_in, open(out, 'w', newline='') as f_outfile:
+        f_out = csv.writer(f_outfile, escapechar=' ',quoting=csv.QUOTE_NONE)
 
-            for line in f_in:
-                line = line.strip()
-                row = []
-                #Just to add the first line
-                if firstLine in line:
-                    row.append(line)
-                    f_out.writerow(row)
-                if filterWord in line:
-                    row.append(line)
-                    f_out.writerow(row)
+        for line in f_in:
+            line = line.strip()
+            row = []
+            #Just to add the first line
+            if firstLine in line:
+                row.append(line)
+                f_out.writerow(row)
+            if filterWord in line:
+                row.append(line)
+                f_out.writerow(row)
 
 #filterOutDuplicates(outputPath+outputName1, outputPath+outputName2)
 def filterOutDuplicates(inp, out): #Technically not used, but will check full lines for duplicates
@@ -88,9 +89,9 @@ def plotThingTest(inp1, inp2, label1, label2):
     plt.legend()
     plt.show()
 
-#filterByCountry(inputPath,outputPath+outputName1,'NO',"postalCode")
+#filterByCountry(inputPath,outputPath+outputName1,wordToFilterBy,rowNameToFilterBy)
 #filterOutDuplicatesByRow(outputPath+outputName1,outputPath+outputName2,sortingRow)
-#filterTooSmallEntities(outputPath+outputName2,outputPath+outputName3,sortingRow,6)
+#filterTooSmallEntities(outputPath+outputName2,outputPath+outputName3,sortingRow,minNameSize)
 #getSmallSetToWorkWith(outputPath+outputName3,outputPath+testCityNumberName,mainCity1,mainCity2,cityJumps)
 
 #plotThingTest(gwFiles+plotFile1,gwFiles+plotFile2,labelName1,labelName2)

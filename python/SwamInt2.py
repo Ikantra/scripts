@@ -1,4 +1,5 @@
 import random
+#import pdb;pdb.set_trace()
 MAXPHEROMONES = 100000
 MINPHEROMONES = 1
 
@@ -44,7 +45,7 @@ class Edge:
            self.pheromones = MINPHEROMONES
 
    def __repr__(self):
-       return(self.fromNode.name + "--(" + str(self.cost) + ")--" + self.toNode.name)
+       return(self.fromNode.name+"--("+str(self.cost)+")--"+self.toNode.name)
 
 a = Node("A")
 b = Node("B")
@@ -64,6 +65,10 @@ edges = [
    Edge(c,d,100),
    Edge(c,e,125),
    Edge(d,e,75)]
+
+def sortEdges(edges):
+    
+    return(sorted(edges))
 
 #Make symetrical
 for oneEdge in edges[:]:
@@ -91,7 +96,7 @@ class Greedy:
          currentEdge = None
          while(not checkAllNodesPresent(self.visitedEdges)):
              possibleEdges = [(edge.cost,edge) for edge in currentNode.edges if edge.toNode not in self.visitedNodes]
-             possibleEdges.sort()
+             possibleEdges.sort(key=lambda x: x[1])
              #import pdb;pdb.set_trace()
              currentEdge = possibleEdges[0][1]
              currentNode = currentEdge.toNode
