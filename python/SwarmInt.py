@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+#By JMH
 import math
 import csv
 import matplotlib.pyplot as plt
@@ -21,7 +23,7 @@ rowNameToFilterBy = "postalCode"
 testCityNumberName = "testCityJumps"
 mainCity1 = "Oslo"
 mainCity2 = "Bergen"
-cityJumps = 5
+cityJumps = 10
 
 def filterByCountry(inp, out, filterWord, firstLine): #str, str, str, str
     with open(inp, 'r') as f_in, open(out, 'w', newline='') as f_outfile:
@@ -92,6 +94,6 @@ def plotThingTest(inp1, inp2, label1, label2):
 #filterByCountry(inputPath,outputPath+outputName1,wordToFilterBy,rowNameToFilterBy)
 #filterOutDuplicatesByRow(outputPath+outputName1,outputPath+outputName2,sortingRow)
 #filterTooSmallEntities(outputPath+outputName2,outputPath+outputName3,sortingRow,minNameSize)
-#getSmallSetToWorkWith(outputPath+outputName3,outputPath+testCityNumberName,mainCity1,mainCity2,cityJumps)
+getSmallSetToWorkWith(outputPath+outputName3,outputPath+testCityNumberName,mainCity1,mainCity2,cityJumps)
 
 #plotThingTest(gwFiles+plotFile1,gwFiles+plotFile2,labelName1,labelName2)
